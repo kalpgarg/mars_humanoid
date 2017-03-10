@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<TableLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+<TableRow android:layout_width="match_parent" android:layout_height="wrap_content" >
+    <TextView android:text="@string/a" style="@style/MotorLabelTextView" android:layout_span="4" android:layout_gravity="center"   />
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="@string/motor_upper_1" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+        <TextView android:text="@string/motor_upper_2" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+    </TableRow>
+
+    <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorAupper1speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorAupper2speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="@string/motor_lower_1" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+        <TextView android:text="@string/motor_lower_2" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+    </TableRow>
+
+    <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorAlower1speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorAlower2speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content" >
+        <TextView android:text="@string/b" style="@style/MotorLabelTextView" android:layout_span="4" android:layout_gravity="center"   />
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="@string/motor_upper_1" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+        <TextView android:text="@string/motor_upper_2" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+    </TableRow>
+
+    <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorBupper1speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorBupper2speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="@string/motor_lower_1" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+        <TextView android:text="@string/motor_lower_2" style="@style/MotorLabelTextView" android:layout_gravity="center" android:layout_span="2"/>
+    </TableRow>
+
+    <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorBlower1speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionNext"/>
+        <TextView android:text="@string/speed" style="@style/MotorLabelTextView"  />
+        <EditText android:id="@+id/motorBlower2speed" android:inputType="numberDecimal" android:hint="@string/speed_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dp" android:imeOptions="actionDone"/>
+
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content" >
+        <Button android:id="@+id/motorControlSendButton" android:text="@string/send" style="@style/MotorLabelTextView" android:layout_span="4" android:layout_gravity="center"  android:textAlignment="center"/>
+    </TableRow>
+
+
+
+</TableLayout>
+    </ScrollView>

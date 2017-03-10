@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Humanoid Control</string>
+    <string name="connect_bluetooth_device">Connect Bluetooth Device</string>
+    <string-array name="controls_array">
+        <item >PID Tuning</item>
+        <item >Motor Control</item>
+        <item> Walking control</item>
+    </string-array>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="motor_upper_1">Motor Upper 1</string>
+    <string name="motor_upper_2">Motor Upper 2</string>
+    <string name="motor_lower_1">Motor Lower 1</string>
+    <string name="motor_lower_2">Motor Lower 2</string>
+    <string name="speed">Speed</string>
+    <string name="speed_hint">100</string>
+    <string name="send">Send</string>
+    <string name="up_down_test">Up Down Test</string>
+    <string name="setpoint">Setpoint</string>
+    <string name="up_down">Up Down</string>
+    <string name="walking">Walking</string>
+    <string name="setpoint_upperA">Setpoint UpperA</string>
+    <string name="setpoint_lowerA">Setpoint LowerA</string>
+    <string name="setpoint_upperB">Setpoint UpperB</string>
+    <string name="setpoint_lowerB">Setpoint LowerB</string>
+    <string name="walk">Walk</string>
+    <string name="right">Right</string>
+    <string name="left">Left</string>
+    <string name="right_left_test">Right Left Test</string>
+</resources>

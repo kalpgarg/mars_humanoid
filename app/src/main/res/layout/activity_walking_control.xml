@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:stretchColumns="*">
+
+        <TableRow android:layout_width="match_parent" android:layout_height="wrap_content" >
+            <TextView  android:text="@string/up_down_test" style="@style/MotorLabelTextView" android:layout_span="2" android:gravity="center" android:textSize="30sp" android:layout_margin="10dp"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/upDownSetpoint" android:imeOptions="actionDone" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+            <Button android:id="@+id/upDownButton" android:text="@string/up_down" android:layout_span="2" />
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+            <TextView  android:text="@string/walking" style="@style/MotorLabelTextView" android:layout_span="2" android:gravity="center" android:textSize="30sp" android:layout_margin="10dp"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint_upperA" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/upperASetpoint" android:imeOptions="actionNext" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint_lowerA" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/lowerASetpoint" android:imeOptions="actionNext" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint_upperB" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/upperBSetpoint" android:imeOptions="actionNext" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint_lowerB" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/lowerBSetpoint" android:imeOptions="actionDone" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+            <Button android:id="@+id/walkButton" android:text="@string/walk" android:layout_span="2" />
+        </TableRow>
+
+        <TableRow android:layout_width="match_parent" android:layout_height="wrap_content" >
+            <TextView  android:text="@string/right_left_test" style="@style/MotorLabelTextView" android:layout_span="2" android:gravity="center" android:textSize="30sp" android:layout_margin="10dp"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent" >
+            <TextView android:text="@string/setpoint" style="@style/MotorLabelTextView"  />
+            <EditText  android:hint="100" android:inputType="numberDecimal" android:id="@+id/rightLeftSetpoint" android:imeOptions="actionDone" android:layout_margin="5dp" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content" android:layout_width="match_parent">
+            <Button android:id="@+id/leftButton" android:text="@string/left" />
+            <Button android:id="@+id/rightButton" android:text="@string/right"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</ScrollView>
