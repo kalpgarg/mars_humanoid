@@ -106,14 +106,73 @@ char right='r';
 char left='l';
 char ident;
 
-int motorAUpper1speed=0;
-int motorAUpper2speed=0;
-int motorALower1speed=0;
-int motorALower2speed=0;
-int motorBUpper1speed=0;
-int motorBUpper2speed=0;
-int motorBLower1speed=0;
-int motorBLower2speed=0;
+int motorAUpper1Speed=0;
+int motorAUpper2Speed=0;
+int motorALower1Speed=0;
+int motorALower2Speed=0;
+int motorBUpper1Speed=0;
+int motorBUpper2Speed=0;
+int motorBLower1Speed=0;
+int motorBLower2Speed=0;
+
+int motorAUpper1_pwm=2;
+int motorAUpper2_pwm=3;
+int motorALower1_pwm=4;
+int motorALower2_pwm=5;
+int motorBUpper1_pwm=6;
+int motorBUpper2_pwm=7;
+int motorBLower1_pwm=8;
+int motorBLower2_pwm=9;
+
+int motorAUpper1_cloc=30;
+int motorAUpper1_anticloc=31;
+int motorAUpper2_cloc=32;
+int motorAUpper2_anticloc=33;
+int motorALower1_cloc=34;
+int motorALower1_anticloc=35;
+int motorALower2_cloc=36;
+int motorALower2_anticloc=37;
+int motorBUpper1_cloc=38;
+int motorBUpper1_anticloc=39;
+int motorBUpper2_cloc=40;
+int motorBUpper2_anticloc=41;
+int motorBLower1_cloc=42;
+int motorBLower1_anticloc=43;
+int motorBLower2_cloc=44;
+int motorBLower2_anticloc=45;
+
+
+int pot_A_upper_side_side;
+int pot_A_lower_side_side;
+int pot_A_upper_front_back;
+int pot_A_lower_front_back;
+int pot_B_upper_side_side;
+int pot_B_lower_side_side;
+int pot_B_upper_front_back;
+int pot_B_lower_front_back;
+
+int pot_A_upper_side_side_pin= A0 ;
+int pot_A_lower_side_side_pin=A1;
+int pot_A_upper_front_back_pin=A2;
+int pot_A_lower_front_back_pin=A3;
+int pot_B_upper_side_side_pin=A4;
+int pot_B_lower_side_side_pin=A5;
+int pot_B_upper_front_back_pin=A6;
+int pot_B_lower_front_back_pin=A7;
+
+int INTERRUPT_PIN=2;
+
+int previousMillis=0;
+int currentMillis=0;
+
+int pot_A_upper_side_side_offset=0;
+int pot_A_lower_side_side_offset=0;
+int pot_A_upper_front_back_offset=0;
+int pot_A_lower_front_back_offset=0;
+int pot_B_upper_side_side_offset=0;
+int pot_B_lower_side_side_offset=0;
+int pot_B_upper_front_back_offset=0;
+int pot_B_lower_front_back_offset=0;
 
 int setpoint_up_down=0;
 
@@ -133,6 +192,7 @@ void setup() {
     #endif
 
  mpu.initialize();
+ pinMode(INTERRUPT_PIN, INPUT);
 
  devStatus = mpu.dmpInitialize();
 
@@ -198,13 +258,40 @@ mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
  pid_lower_B_front_back.SetMode(AUTOMATIC);
  pid_lower_B_front_back.SetOutputLimits(-255,255);
  pid_lower_B_front_back.SetSampleTime(20);
+
+pinMode(motorAUpper1_pwm,OUTPUT);
+pinMode(motorAUpper2_pwm,OUTPUT);
+pinMode(motorALower1_pwm,OUTPUT);
+pinMode(motorALower2_pwm,OUTPUT);
+pinMode(motorBUpper1_pwm,OUTPUT);
+pinMode(motorBUpper2_pwm,OUTPUT);
+pinMode(motorBLower1_pwm,OUTPUT);
+pinMode(motorBLower2_pwm,OUTPUT);
+
+pinMode(motorAUpper1_cloc,OUTPUT);
+pinMode(motorAUpper2_cloc,OUTPUT);
+pinMode(motorALower1_cloc,OUTPUT);
+pinMode(motorALower2_cloc,OUTPUT);
+pinMode(motorBUpper1_cloc,OUTPUT);
+pinMode(motorBUpper2_cloc,OUTPUT);
+pinMode(motorBLower1_cloc,OUTPUT);
+pinMode(motorBLower2_cloc,OUTPUT);
+
+pinMode(motorAUpper1_anticloc,OUTPUT);
+pinMode(motorAUpper2_anticloc,OUTPUT);
+pinMode(motorALower1_anticloc,OUTPUT);
+pinMode(motorALower2_anticloc,OUTPUT);
+pinMode(motorBUpper1_anticloc,OUTPUT);
+pinMode(motorBUpper2_anticloc,OUTPUT);
+pinMode(motorBLower1_anticloc,OUTPUT);
+pinMode(motorBLower2_anticloc,OUTPUT);
+
  
 }
 
 
 
 void loop() { 
-  pid_Imu();
  
     if(bluetooth.available()>0){
       ident=bluetooth.read();
@@ -213,25 +300,27 @@ void loop() {
         
         case 'm':
         
-        motorAUpper1speed=bluetooth.parseInt();
-        motorAUpper2speed=bluetooth.parseInt();
-        motorALower1speed=bluetooth.parseInt();
-        motorALower2speed=bluetooth.parseInt();
-        motorBUpper1speed=bluetooth.parseInt();
-        motorBUpper2speed=bluetooth.parseInt();
-        motorBLower1speed=bluetooth.parseInt();
-        motorBLower2speed=bluetooth.parseInt();
+        motorAUpper1Speed=bluetooth.parseInt();
+        motorAUpper2Speed=bluetooth.parseInt();
+        motorALower1Speed=bluetooth.parseInt();
+        motorALower2Speed=bluetooth.parseInt();
+        motorBUpper1Speed=bluetooth.parseInt();
+        motorBUpper2Speed=bluetooth.parseInt();
+        motorBLower1Speed=bluetooth.parseInt();
+        motorBLower2Speed=bluetooth.parseInt();
         
           Serial.println(motorControl);
-          Serial.println(motorAUpper1speed);
-          Serial.println(motorAUpper2speed);
-          Serial.println(motorALower1speed);
-          Serial.println(motorALower2speed);
-          Serial.println(motorBUpper1speed);
-          Serial.println(motorBUpper2speed);
-          Serial.println(motorBLower1speed);
-          Serial.println(motorBLower2speed);
+          Serial.println(motorAUpper1Speed);
+          Serial.println(motorAUpper2Speed);
+          Serial.println(motorALower1Speed);
+          Serial.println(motorALower2Speed);
+          Serial.println(motorBUpper1Speed);
+          Serial.println(motorBUpper2Speed);
+          Serial.println(motorBLower1Speed);
+          Serial.println(motorBLower2Speed);
           Serial.println(" ");
+
+          motorSpeed();
           break;
 
         case 'u':
@@ -245,6 +334,35 @@ void loop() {
           Serial.println(upDownTest);
           Serial.println(setpoint_up_down);
           Serial.println(" ");
+
+          previousMillis=millis();
+          currentMillis=previousMillis;
+
+          while(currentMillis-previousMillis > 100){
+           currentMillis+=20;
+          
+          input_upper_A_front_back=analogRead(pot_A_upper_front_back_pin) - pot_A_upper_front_back_offset;
+          input_lower_A_front_back=analogRead(pot_A_lower_front_back_pin) - pot_A_lower_front_back_offset;
+          input_upper_B_front_back=analogRead(pot_B_upper_front_back_pin) - pot_B_upper_front_back_offset;
+          input_lower_B_front_back=analogRead(pot_B_lower_front_back_pin) - pot_B_lower_front_back_offset;
+          
+          pid_upper_A_front_back.Compute();
+          pid_lower_A_front_back.Compute();
+          pid_upper_B_front_back.Compute();
+          pid_lower_B_front_back.Compute();
+
+          motorAUpper1Speed=output_upper_A_front_back;
+          motorAUpper2Speed=output_upper_A_front_back;
+          motorALower1Speed=output_lower_A_front_back;
+          motorALower2Speed=output_lower_A_front_back;
+          motorBUpper1Speed=output_upper_B_front_back;
+          motorBUpper2Speed=output_upper_B_front_back;
+          motorBLower1Speed=output_lower_B_front_back;
+          motorBLower2Speed=output_lower_B_front_back;
+
+          motorSpeed();
+
+         }
           
         break;
 
@@ -261,9 +379,97 @@ void loop() {
           Serial.println(setpoint_upper_B_front_back);
           Serial.println(setpoint_lower_B_front_back);
           Serial.println(" ");
-
-          pid_Imu();
           
+          for(int i=0;i<6;i++) {
+
+          previousMillis=millis();
+          currentMillis=previousMillis;
+
+          while(currentMillis-previousMillis>100){
+            currentMillis+=20;
+
+            pid_Imu();
+            
+            input_upper_A_front_back=analogRead(pot_A_upper_front_back_pin) - pot_A_upper_front_back_offset;
+            input_lower_A_front_back=analogRead(pot_A_lower_front_back_pin) - pot_A_lower_front_back_offset;
+            pid_upper_A_front_back.Compute();
+            pid_lower_A_front_back.Compute();
+
+            output_upper_B_front_back=0;
+            output_lower_B_front_back=0;
+            
+            setpoint_upper_A_side_side=output_IMU;
+            setpoint_lower_A_side_side=output_IMU;
+            input_upper_A_side_side=analogRead(pot_A_upper_side_side)-pot_A_upper_side_side_offset;
+            input_lower_A_side_side=analogRead(pot_A_lower_side_side)-pot_A_lower_side_side_offset;
+            pid_upper_A_side_side.Compute();
+            pid_lower_A_side_side.Compute();
+
+            setpoint_upper_B_side_side=output_IMU;
+            setpoint_lower_B_side_side=output_IMU;
+            input_upper_B_side_side=analogRead(pot_B_upper_side_side)-pot_B_upper_side_side_offset;
+            input_lower_B_side_side=analogRead(pot_B_lower_side_side)-pot_B_lower_side_side_offset;
+            pid_upper_B_side_side.Compute();
+            pid_lower_B_side_side.Compute();
+
+            motorAUpper1Speed=output_upper_A_front_back - output_upper_A_side_side;
+            motorALower1Speed=output_lower_A_front_back - output_lower_A_side_side;
+            motorBUpper1Speed=output_upper_B_front_back - output_upper_B_side_side;
+            motorBLower1Speed=output_lower_B_front_back - output_lower_B_side_side;
+            motorAUpper2Speed=output_upper_A_front_back + output_upper_A_side_side;
+            motorALower2Speed=output_lower_A_front_back + output_lower_A_side_side;
+            motorBUpper2Speed=output_upper_B_front_back + output_upper_B_side_side;
+            motorBLower2Speed=output_lower_B_front_back + output_lower_B_side_side;
+
+            motorSpeed();
+
+           }
+
+            previousMillis=millis();
+            currentMillis=previousMillis;
+
+            while(currentMillis-previousMillis>100){
+            currentMillis+=20;
+
+            pid_Imu();
+            
+            input_upper_B_front_back=analogRead(pot_B_upper_front_back_pin) - pot_B_upper_front_back_offset;
+            input_lower_B_front_back=analogRead(pot_B_lower_front_back_pin) - pot_B_lower_front_back_offset;
+            pid_upper_B_front_back.Compute();
+            pid_lower_B_front_back.Compute();
+
+            output_upper_A_front_back=0;
+            output_lower_A_front_back=0;
+            
+            setpoint_upper_B_side_side=output_IMU;
+            setpoint_lower_B_side_side=output_IMU;
+            input_upper_B_side_side=analogRead(pot_B_upper_side_side)-pot_B_upper_side_side_offset;
+            input_lower_B_side_side=analogRead(pot_B_lower_side_side)-pot_B_lower_side_side_offset;
+            pid_upper_B_side_side.Compute();
+            pid_lower_B_side_side.Compute();
+
+            setpoint_upper_A_side_side=output_IMU;
+            setpoint_lower_A_side_side=output_IMU;
+            input_upper_A_side_side=analogRead(pot_A_upper_side_side)-pot_A_upper_side_side_offset;
+            input_lower_A_side_side=analogRead(pot_A_lower_side_side)-pot_A_lower_side_side_offset;
+            pid_upper_A_side_side.Compute();
+            pid_lower_A_side_side.Compute();
+
+            motorAUpper1Speed=output_upper_A_front_back - output_upper_A_side_side;
+            motorALower1Speed=output_lower_A_front_back - output_lower_A_side_side;
+            motorBUpper1Speed=output_upper_B_front_back - output_upper_B_side_side;
+            motorBLower1Speed=output_lower_B_front_back - output_lower_B_side_side;
+            motorAUpper2Speed=output_upper_A_front_back + output_upper_A_side_side;
+            motorALower2Speed=output_lower_A_front_back + output_lower_A_side_side;
+            motorBUpper2Speed=output_upper_B_front_back + output_upper_B_side_side;
+            motorBLower2Speed=output_lower_B_front_back + output_lower_B_side_side;
+
+            motorSpeed();
+            
+            }
+
+      }
+
         break;
 
         case 'r':
@@ -364,12 +570,156 @@ void pid_Imu(){
             roll = ypr[2]* 180/M_PI;
         #endif
 
-        /*Serial.print('y');   
-        Serial.print (",");
-        Serial.print(pitch,4);
-        Serial.print (",");
-        Serial.print(roll,4);
-        Serial.print('y'); */  
+        setpoint_IMU=0;
+        input_IMU=roll;
+        pid_IMU.Compute();
 
     }
-  }
+}
+
+    void motorSpeed(){
+      if(motorAUpper1Speed<0){
+              digitalWrite(motorAUpper1_cloc,LOW);
+              digitalWrite(motorAUpper1_anticloc,HIGH);
+
+              motorAUpper1Speed=abs(motorAUpper1Speed);
+              analogWrite(motorAUpper1_pwm,motorAUpper1Speed);
+            }
+            else if(motorAUpper1Speed>0){
+              digitalWrite(motorAUpper1_cloc,HIGH);
+              digitalWrite(motorAUpper1_anticloc,LOW);
+              
+              analogWrite(motorAUpper1_pwm,motorAUpper1Speed);
+              }
+             else{
+              digitalWrite(motorAUpper1_cloc,HIGH);
+              digitalWrite(motorAUpper1_anticloc,HIGH);
+              }
+
+          if(motorAUpper2Speed<0){
+              digitalWrite(motorAUpper2_cloc,LOW);
+              digitalWrite(motorAUpper2_anticloc,HIGH);
+
+              motorAUpper2Speed=abs(motorAUpper2Speed);
+              analogWrite(motorAUpper2_pwm,motorAUpper2Speed);
+            }
+            else if(motorAUpper2Speed>0){
+              digitalWrite(motorAUpper2_cloc,HIGH);
+              digitalWrite(motorAUpper2_anticloc,LOW);
+              
+              analogWrite(motorAUpper2_pwm,motorAUpper2Speed);
+              }
+             else{
+              digitalWrite(motorAUpper2_cloc,HIGH);
+              digitalWrite(motorAUpper2_anticloc,HIGH);
+              }
+
+          if(motorALower1Speed<0){
+              digitalWrite(motorALower1_cloc,LOW);
+              digitalWrite(motorALower1_anticloc,HIGH);
+
+              motorALower1Speed=abs(motorALower1Speed);
+              analogWrite(motorALower1_pwm,motorALower1Speed);
+            }
+            else if(motorALower1Speed>0){
+              digitalWrite(motorALower1_cloc,HIGH);
+              digitalWrite(motorALower1_anticloc,LOW);
+              
+              analogWrite(motorALower1_pwm,motorALower1Speed);
+              }
+             else{
+              digitalWrite(motorALower1_cloc,HIGH);
+              digitalWrite(motorALower1_anticloc,HIGH);
+              }
+
+          if(motorALower2Speed<0){
+              digitalWrite(motorALower2_cloc,LOW);
+              digitalWrite(motorALower2_anticloc,HIGH);
+
+              motorALower2Speed=abs(motorALower2Speed);
+              analogWrite(motorALower2_pwm,motorALower2Speed);
+            }
+            else if(motorALower2Speed>0){
+              digitalWrite(motorALower2_cloc,HIGH);
+              digitalWrite(motorALower2_anticloc,LOW);
+              
+              analogWrite(motorALower2_pwm,motorALower2Speed);
+              }
+             else{
+              digitalWrite(motorALower2_cloc,HIGH);
+              digitalWrite(motorALower2_anticloc,HIGH);
+              }
+
+           if(motorBUpper1Speed<0){
+              digitalWrite(motorBUpper1_cloc,LOW);
+              digitalWrite(motorBUpper1_anticloc,HIGH);
+
+              motorBUpper1Speed=abs(motorBUpper1Speed);
+              analogWrite(motorBUpper1_pwm,motorBUpper1Speed);
+            }
+            else if(motorBUpper1Speed>0){
+              digitalWrite(motorBUpper1_cloc,HIGH);
+              digitalWrite(motorBUpper1_anticloc,LOW);
+              
+              analogWrite(motorBUpper1_pwm,motorAUpper1Speed);
+              }
+             else{
+              digitalWrite(motorBUpper1_cloc,HIGH);
+              digitalWrite(motorBUpper1_anticloc,HIGH);
+              }
+
+          if(motorBUpper2Speed<0){
+              digitalWrite(motorBUpper2_cloc,LOW);
+              digitalWrite(motorBUpper2_anticloc,HIGH);
+
+              motorBUpper2Speed=abs(motorBUpper2Speed);
+              analogWrite(motorBUpper2_pwm,motorBUpper2Speed);
+            }
+            else if(motorBUpper2Speed>0){
+              digitalWrite(motorBUpper2_cloc,HIGH);
+              digitalWrite(motorBUpper2_anticloc,LOW);
+              
+              analogWrite(motorBUpper2_pwm,motorBUpper2Speed);
+              }
+             else{
+              digitalWrite(motorBUpper2_cloc,HIGH);
+              digitalWrite(motorBUpper2_anticloc,HIGH);
+              }
+
+          if(motorBLower1Speed<0){
+              digitalWrite(motorBLower1_cloc,LOW);
+              digitalWrite(motorBLower1_anticloc,HIGH);
+
+              motorBLower1Speed=abs(motorBLower1Speed);
+              analogWrite(motorBLower1_pwm,motorBLower1Speed);
+            }
+            else if(motorBLower1Speed>0){
+              digitalWrite(motorBLower1_cloc,HIGH);
+              digitalWrite(motorBLower1_anticloc,LOW);
+              
+              analogWrite(motorBLower1_pwm,motorBLower1Speed);
+              }
+             else{
+              digitalWrite(motorBLower1_cloc,HIGH);
+              digitalWrite(motorBLower1_anticloc,HIGH);
+              }
+
+          if(motorBLower2Speed<0){
+              digitalWrite(motorBLower2_cloc,LOW);
+              digitalWrite(motorBLower2_anticloc,HIGH);
+
+              motorBLower2Speed=abs(motorBLower2Speed);
+              analogWrite(motorBLower2_pwm,motorBLower2Speed);
+            }
+            else if(motorBLower2Speed>0){
+              digitalWrite(motorBLower2_cloc,HIGH);
+              digitalWrite(motorBLower2_anticloc,LOW);
+              
+              analogWrite(motorBLower2_pwm,motorBLower2Speed);
+              }
+             else{
+              digitalWrite(motorBLower2_cloc,HIGH);
+              digitalWrite(motorBLower2_anticloc,HIGH);
+              }
+     }
+  
