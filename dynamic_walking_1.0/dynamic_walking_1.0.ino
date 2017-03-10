@@ -9,6 +9,9 @@
 
 MPU6050 mpu;
 
+#define OUTPUT_READABLE_YAWPITCHROLL
+#define OUTPUT_TEAPOT
+
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
 uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
@@ -186,13 +189,20 @@ void setup() {
 
    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
-        TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+        //TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
+        Wire.setClock(400000);
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
 
+Serial.begin(115200);
+while(!Serial);
+
  mpu.initialize();
  pinMode(INTERRUPT_PIN, INPUT);
+ while (Serial.available() && Serial.read()); // empty buffer
+    while (!Serial.available());                 // wait for data
+    while (Serial.available() && Serial.read());
 
  devStatus = mpu.dmpInitialize();
 
@@ -221,7 +231,6 @@ mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
     }  
  
  bluetooth.begin(9600);
- Serial.begin(115200);
 
  pid_IMU.SetMode(AUTOMATIC);
  pid_IMU.SetOutputLimits(-255,255);
@@ -361,8 +370,7 @@ void loop() {
           motorBLower2Speed=output_lower_B_front_back;
 
           motorSpeed();
-
-         }
+        }
           
         break;
 
@@ -388,7 +396,7 @@ void loop() {
           while(currentMillis-previousMillis>100){
             currentMillis+=20;
 
-            pid_Imu();
+            pid_Imu(0);
             
             input_upper_A_front_back=analogRead(pot_A_upper_front_back_pin) - pot_A_upper_front_back_offset;
             input_lower_A_front_back=analogRead(pot_A_lower_front_back_pin) - pot_A_lower_front_back_offset;
@@ -431,7 +439,7 @@ void loop() {
             while(currentMillis-previousMillis>100){
             currentMillis+=20;
 
-            pid_Imu();
+            pid_Imu(0);
             
             input_upper_B_front_back=analogRead(pot_B_upper_front_back_pin) - pot_B_upper_front_back_offset;
             input_lower_B_front_back=analogRead(pot_B_lower_front_back_pin) - pot_B_lower_front_back_offset;
@@ -465,7 +473,6 @@ void loop() {
             motorBLower2Speed=output_lower_B_front_back + output_lower_B_side_side;
 
             motorSpeed();
-            
             }
 
       }
@@ -474,42 +481,110 @@ void loop() {
 
         case 'r':
 
-        setpoint_upper_A_front_back=bluetooth.parseInt();
-        setpoint_lower_A_front_back=setpoint_upper_A_front_back;
-        setpoint_upper_B_front_back=0;
-        setpoint_lower_B_front_back=0;
+        setpoint_IMU=bluetooth.parseInt();
+        Serial.println(right);
+        Serial.println(setpoint_IMU);
+        Serial.println(" ");
 
-          Serial.println(right);
-          Serial.println(setpoint_upper_A_front_back);
-          Serial.println(" ");
+        previousMillis=millis();
+        currentMillis=previousMillis;
 
-          pid_Imu();
+        while(currentMillis-previousMillis>100){
+        currentMillis+=20;
+       
+        pid_Imu(setpoint_IMU);
+        
+            setpoint_upper_A_side_side=output_IMU;
+            setpoint_lower_A_side_side=output_IMU;
+            input_upper_A_side_side=analogRead(pot_A_upper_side_side)-pot_A_upper_side_side_offset;
+            input_lower_A_side_side=analogRead(pot_A_lower_side_side)-pot_A_lower_side_side_offset;
+            pid_upper_A_side_side.Compute();
+            pid_lower_A_side_side.Compute();
 
+            setpoint_upper_B_side_side=output_IMU;
+            setpoint_lower_B_side_side=output_IMU;
+            input_upper_B_side_side=analogRead(pot_B_upper_side_side)-pot_B_upper_side_side_offset;
+            input_lower_B_side_side=analogRead(pot_B_lower_side_side)-pot_B_lower_side_side_offset;
+            pid_upper_B_side_side.Compute();
+            pid_lower_B_side_side.Compute();
+
+            output_upper_A_front_back=0;
+            output_lower_A_front_back=0;
+            output_upper_B_front_back=0;
+            output_lower_B_front_back=0;
+
+            motorAUpper1Speed=output_upper_A_front_back - output_upper_A_side_side;
+            motorALower1Speed=output_lower_A_front_back - output_lower_A_side_side;
+            motorBUpper1Speed=output_upper_B_front_back - output_upper_B_side_side;
+            motorBLower1Speed=output_lower_B_front_back - output_lower_B_side_side;
+            motorAUpper2Speed=output_upper_A_front_back + output_upper_A_side_side;
+            motorALower2Speed=output_lower_A_front_back + output_lower_A_side_side;
+            motorBUpper2Speed=output_upper_B_front_back + output_upper_B_side_side;
+            motorBLower2Speed=output_lower_B_front_back + output_lower_B_side_side;
+
+            motorSpeed();
+
+        
+        }
+          
         break;
 
         case 'l':
 
-        setpoint_upper_B_front_back=bluetooth.parseInt();
-        setpoint_lower_B_front_back=setpoint_upper_A_front_back;
-        setpoint_upper_A_front_back=0;
-        setpoint_lower_A_front_back=0;
+        setpoint_IMU=bluetooth.parseInt();
 
           Serial.println(left);
-          Serial.println(setpoint_upper_B_front_back);
+          Serial.println(setpoint_IMU);
           Serial.println(" ");
 
-          pid_Imu();
+        previousMillis=millis();
+        currentMillis=previousMillis;
 
+        while(currentMillis-previousMillis>100){
+        currentMillis+=20;
+        
+        pid_Imu(-(setpoint_IMU));
+        
+            setpoint_upper_A_side_side=output_IMU;
+            setpoint_lower_A_side_side=output_IMU;
+            input_upper_A_side_side=analogRead(pot_A_upper_side_side)-pot_A_upper_side_side_offset;
+            input_lower_A_side_side=analogRead(pot_A_lower_side_side)-pot_A_lower_side_side_offset;
+            pid_upper_A_side_side.Compute();
+            pid_lower_A_side_side.Compute();
+
+            setpoint_upper_B_side_side=output_IMU;
+            setpoint_lower_B_side_side=output_IMU;
+            input_upper_B_side_side=analogRead(pot_B_upper_side_side)-pot_B_upper_side_side_offset;
+            input_lower_B_side_side=analogRead(pot_B_lower_side_side)-pot_B_lower_side_side_offset;
+            pid_upper_B_side_side.Compute();
+            pid_lower_B_side_side.Compute();
+
+            output_upper_A_front_back=0;
+            output_lower_A_front_back=0;
+            output_upper_B_front_back=0;
+            output_lower_B_front_back=0;
+
+            motorAUpper1Speed=output_upper_A_front_back - output_upper_A_side_side;
+            motorALower1Speed=output_lower_A_front_back - output_lower_A_side_side;
+            motorBUpper1Speed=output_upper_B_front_back - output_upper_B_side_side;
+            motorBLower1Speed=output_lower_B_front_back - output_lower_B_side_side;
+            motorAUpper2Speed=output_upper_A_front_back + output_upper_A_side_side;
+            motorALower2Speed=output_lower_A_front_back + output_lower_A_side_side;
+            motorBUpper2Speed=output_upper_B_front_back + output_upper_B_side_side;
+            motorBLower2Speed=output_lower_B_front_back + output_lower_B_side_side;
+
+            motorSpeed();
+            
         break;
           
         }
      
       }
-      delay(10);
-
+   }
+   delay(10);
 }
 
-void pid_Imu(){
+void pid_Imu(int set){
 
   // if programming failed, don't try to do anything
     if (!dmpReady) return;
@@ -570,14 +645,14 @@ void pid_Imu(){
             roll = ypr[2]* 180/M_PI;
         #endif
 
-        setpoint_IMU=0;
+        setpoint_IMU=set;
         input_IMU=roll;
         pid_IMU.Compute();
 
     }
 }
-
-    void motorSpeed(){
+void motorSpeed(){
+      
       if(motorAUpper1Speed<0){
               digitalWrite(motorAUpper1_cloc,LOW);
               digitalWrite(motorAUpper1_anticloc,HIGH);
